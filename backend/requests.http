@@ -1,0 +1,146 @@
+@baseUrl = http://localhost:5000/api
+
+### Health check
+GET {{baseUrl}}/health
+
+### Sign up
+POST {{baseUrl}}/auth/signup
+Content-Type: application/json
+
+{
+  "displayName": "Rhea Sharma",
+  "username": "rhea.codes",
+  "email": "rhea@example.com",
+  "password": "pass1234"
+}
+
+### Log in
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "identifier": "rhea.codes",
+  "password": "pass1234"
+}
+
+### Current user (paste token from login/signup response above)
+GET {{baseUrl}}/auth/me
+Authorization: Bearer PASTE_TOKEN_HERE
+
+### List posts (paginated)
+GET {{baseUrl}}/posts?page=1&limit=10
+
+### Get single post
+GET {{baseUrl}}/posts/1
+
+### Create post (text only — paste a token from login/signup above)
+POST {{baseUrl}}/posts
+Authorization: Bearer PASTE_TOKEN_HERE
+Content-Type: application/json
+
+{
+  "content": "Hello world, this is my first post!"
+}
+
+### Edit post (owner only)
+PUT {{baseUrl}}/posts/1
+Authorization: Bearer PASTE_TOKEN_HERE
+Content-Type: application/json
+
+{
+  "content": "Edited content"
+}
+
+### Delete post (owner only)
+DELETE {{baseUrl}}/posts/1
+Authorization: Bearer PASTE_TOKEN_HERE
+
+# Note: image upload uses multipart/form-data (field name "image"), which the
+# REST Client extension doesn't send well from this file — test that from the
+# frontend post form, or with curl:
+#   curl -X POST http://localhost:5000/api/posts \
+#     -H "Authorization: Bearer PASTE_TOKEN_HERE" \
+#     -F "content=Testing image upload" \
+#     -F "image=@/path/to/photo.jpg"
+
+### ============ Day 3: Follow System ============
+
+### Follow a user (paste your token + a target user id)
+POST {{baseUrl}}/follows/2
+Authorization: Bearer PASTE_TOKEN_HERE
+
+### Follow the same user again — expect 409 "already following"
+POST {{baseUrl}}/follows/2
+Authorization: Bearer PASTE_TOKEN_HERE
+
+### Follow yourself — expect 400 "can't follow yourself"
+POST {{baseUrl}}/follows/PASTE_YOUR_OWN_ID
+Authorization: Bearer PASTE_TOKEN_HERE
+
+### Unfollow
+DELETE {{baseUrl}}/follows/2
+Authorization: Bearer PASTE_TOKEN_HERE
+
+### Unfollow again — expect 404 "not following"
+DELETE {{baseUrl}}/follows/2
+Authorization: Bearer PASTE_TOKEN_HERE
+
+### Followers of a user (paginated, public — token optional, adds isFollowing if sent)
+GET {{baseUrl}}/follows/2/followers?page=1&limit=20
+Authorization: Bearer PASTE_TOKEN_HERE
+
+### Following list of a user (paginated)
+GET {{baseUrl}}/follows/2/following?page=1&limit=20
+Authorization: Bearer PASTE_TOKEN_HERE
+
+### Ids the signed-in user follows (used by frontend for button state)
+GET {{baseUrl}}/follows/following-ids
+Authorization: Bearer PASTE_TOKEN_HERE
+
+### Follow suggestions (mutual connections first, newest users as fallback)
+GET {{baseUrl}}/follows/suggestions?limit=8
+Authorization: Bearer PASTE_TOKEN_HERE
+
+### Discover — every user on the platform (paginated, excludes yourself)
+GET {{baseUrl}}/users?page=1&limit=20
+Authorization: Bearer PASTE_TOKEN_HERE
+
+### Public profile + follow counts
+GET {{baseUrl}}/users/2
+Authorization: Bearer PASTE_TOKEN_HERE
+
+### --- Day 4: Likes & Comments ---
+
+### Like a post
+POST {{baseUrl}}/posts/1/like
+Authorization: Bearer PASTE_TOKEN_HERE
+
+### Unlike a post
+DELETE {{baseUrl}}/posts/1/like
+Authorization: Bearer PASTE_TOKEN_HERE
+
+### List comments on a post (paginated, oldest first)
+GET {{baseUrl}}/posts/1/comments?page=1&limit=20
+
+### Add a comment
+POST {{baseUrl}}/posts/1/comments
+Authorization: Bearer PASTE_TOKEN_HERE
+Content-Type: application/json
+
+{
+  "content": "This is a comment!"
+}
+
+### Delete your own comment
+DELETE {{baseUrl}}/posts/1/comments/1
+Authorization: Bearer PASTE_TOKEN_HERE
+
+### --- Day 5: Following Feed ---
+
+### Home feed — posts from people you follow, newest first (first page)
+GET {{baseUrl}}/posts/feed?limit=10
+Authorization: Bearer PASTE_TOKEN_HERE
+
+### Home feed — next page via cursor returned as nextCursor above
+GET {{baseUrl}}/posts/feed?limit=10&cursor=PASTE_NEXT_CURSOR_HERE
+Authorization: Bearer PASTE_TOKEN_HERE

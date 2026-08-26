@@ -1,0 +1,10 @@
+{
+  "editor.formatOnSave": true,
+  "editor.tabSize": 2,
+  "files.exclude": {
+    "**/node_modules": true,
+    "**/app.db-shm": true,
+    "**/app.db-wal": true
+  },
+  "liveServer.settings.root": "/frontend"
+}

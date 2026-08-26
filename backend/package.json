@@ -1,0 +1,20 @@
+{
+  "name": "social-feed-backend",
+  "version": "1.0.0",
+  "description": "Backend for Social Network with Feed Algorithm — Day 5: Basic Feed (Chronological)",
+  "main": "server.js",
+  "type": "commonjs",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "dependencies": {
+    "better-sqlite3": "^11.3.0",
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "jsonwebtoken": "^9.0.2",
+    "multer": "^2.0.1"
+  }
+}

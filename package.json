@@ -1,0 +1,11 @@
+{
+  "name": "pulse-social-app",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Social network with feed algorithm — posts, follows, likes, ranking. Day 2: Posts Module.",
+  "scripts": {
+    "install:backend": "cd backend && npm install",
+    "start": "cd backend && npm start",
+    "dev": "cd backend && npm run dev"
+  }
+}
