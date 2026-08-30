@@ -16,7 +16,11 @@ app.use(cors());
 app.use(express.json());
 
 // Serves uploaded post images, e.g. GET /uploads/172839-abc123.jpg
-app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+// Serves uploaded post images, e.g. GET /uploads/172839-abc123.jpg
+const UPLOADS_STATIC_DIR = process.env.VERCEL
+  ? path.join(require("os").tmpdir(), "uploads")
+  : path.join(__dirname, "uploads");
+app.use("/uploads", express.static(UPLOADS_STATIC_DIR));
 
 app.get("/api/health", (req, res) => {
   res.json({ status: "ok", day: 7, feature: "production-ready with blocks, accessibility, deployment" });
@@ -41,6 +45,13 @@ if (process.env.NODE_ENV === "production") {
   });
 }
 
-app.listen(PORT, () => {
-  console.log(`Pulse backend running on port ${PORT}`);
-});
+// Vercel runs this file as a serverless function and calls the exported
+// app directly — it must NOT call app.listen() in that environment.
+// Locally (or on Render), we still want a normal long-running server.
+if (!process.env.VERCEL) {
+  app.listen(PORT, () => {
+    console.log(`Pulse backend running on port ${PORT}`);
+  });
+}
+
+module.exports = app;
