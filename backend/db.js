@@ -5,9 +5,15 @@
 // migrations later.
 
 const path = require("path");
+const os = require("os");
 const Database = require("better-sqlite3");
 
-const dbPath = path.join(__dirname, "app.db");
+// On Vercel, the project folder is read-only — only os.tmpdir() (/tmp) is
+// writable, and it does NOT persist reliably across requests/instances.
+// Locally and on Render, we keep using a normal file next to this module.
+const dbPath = process.env.VERCEL
+  ? path.join(os.tmpdir(), "app.db")
+  : path.join(__dirname, "app.db");
 const db = new Database(dbPath);
 
 db.pragma("journal_mode = WAL");
