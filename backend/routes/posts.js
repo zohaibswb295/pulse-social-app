@@ -13,7 +13,12 @@ const MAX_CONTENT_LENGTH = 500;
 const MAX_IMAGE_BYTES = 5 * 1024 * 1024; // 5MB
 const ALLOWED_IMAGE_TYPES = new Set(["image/jpeg", "image/png", "image/gif", "image/webp"]);
 
-const UPLOAD_DIR = path.join(__dirname, "..", "uploads");
+// On Vercel, only os.tmpdir() (/tmp) is writable, and uploaded files there
+// do NOT persist reliably across requests/instances. Locally and on Render,
+// we keep using a normal "uploads" folder next to the backend code.
+const UPLOAD_DIR = process.env.VERCEL
+  ? path.join(require("os").tmpdir(), "uploads")
+  : path.join(__dirname, "..", "uploads");
 fs.mkdirSync(UPLOAD_DIR, { recursive: true });
 
 // ---------- image upload (multer) ----------
